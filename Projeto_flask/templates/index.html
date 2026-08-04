@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coxinharia House - Painel de Controle</title>
+    
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <meta name="theme-color" content="#5c0612">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Topo / Header */
+        header {
+            background-color: #5c0612;
+            color: #fff;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        header img {
+            height: 45px; /* Logo pequena no canto superior esquerdo */
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Container Principal */
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* BANNER EM LARGURA TOTAL (Fundo vermelho de ponta a ponta) */
+        .banner-full-width {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            background-color: #5c0612;
+            padding: 25px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .banner-full-width img {
+            max-width: 500px; /* Tamanho do banner retangular do meio */
+            width: 85%;
+            height: auto;
+            display: inline-block;
+        }
+
+        /* Cards Financeiros */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 4px solid #ccc;
+        }
+
+        .card.vendas { border-top-color: #2e7d32; }
+        .card.compras { border-top-color: #c62828; }
+        .card.saldo { border-top-color: #f9a825; }
+
+        .card h3 {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #222;
+        }
+
+        /* Seção de Formulários */
+        .forms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .form-box {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .form-box h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #5c0612;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #5c0612;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #7a0918;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="{{ url_for('static', filename='logo1.png') }}" alt="Logo Pequena Coxinharia">
+        <h1>Coxinharia House - Painel de Controle</h1>
+    </header>
+
+    <div class="banner-full-width">
+        <img src="{{ url_for('static', filename='logo2.png') }}" alt="Coxinharia House Banner Central">
+    </div>
+
+    <div class="container">
+        
+        <div class="cards-grid">
+            <div class="card vendas">
+                <h3>Total em Vendas</h3>
+                <p>R$ {{ "%.2f"|format(total_vendas) if total_vendas else "0.00" }}</p>
+            </div>
+            <div class="card compras">
+                <h3>Total em Compras</h3>
+                <p>R$ {{ "%.2f"|format(total_compras) if total_compras else "0.00" }}</p>
+            </div>
+            <div class="card saldo">
+                <h3>Saldo / Lucro</h3>
+                <p>R$ {{ "%.2f"|format(saldo) if saldo else "0.00" }}</p>
+            </div>
+        </div>
+
+        <div class="forms-grid">
+            
+            <div class="form-box">
+                <h2>🛒 Registrar Nova Venda</h2>
+                <form action="/nova_venda" method="POST">
+                    <div class="form-group">
+                        <label for="cliente">Nome do Cliente / Telefone</label>
+                        <input type="text" id="cliente" name="cliente" required placeholder="Ex: Maria (19 99999-9999)">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantidade">Quantidade de Coxinhas</label>
+                        <input type="number" id="quantidade" name="quantidade" required min="1" placeholder="Ex: 50">
+                    </div>
+                    <div class="form-group">
+                        <label for="valor_total">Valor Total (R$)</label>
+                        <input type="number" step="0.01" id="valor_total" name="valor_total" required placeholder="Ex: 150.00">
+                    </div>
+                    <button type="submit">Salvar Venda</button>
+                </form>
+            </div>
+
+            <div class="form-box">
+                <h2>📦 Registrar Compra (Estoque)</h2>
+                <form action="/nova_compra" method="POST">
+                    <div class="form-group">
+                        <label for="item">Item Comprado</label>
+                        <input type="text" id="item" name="item" required placeholder="Ex: Farinha, Frango, Caixa">
+                    </div>
+                    <div class="form-group">
+                        <label for="unidade">Quantidade / Unidade</label>
+                        <input type="text" id="unidade" name="unidade" placeholder="Ex: 10kg, 5 caixas">
+                    </div>
+                    <div class="form-group">
+                        <label for="valor_pago">Valor Pago (R$)</label>
+                        <input type="number" step="0.01" id="valor_pago" name="valor_pago" required placeholder="Ex: 85.50">
+                    </div>
+                    <button type="submit">Salvar Compra</button>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

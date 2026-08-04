@@ -1,0 +1,20 @@
+{
+  "name": "Coxinharia House",
+  "short_name": "Coxinharia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#5c0612",
+  "theme_color": "#5c0612",
+  "icons": [
+    {
+      "src": "/static/logo1.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/logo1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
